@@ -124,9 +124,20 @@ $(document).ready(function(){
     TriviaGame.startCountdown();
 });
 
+//user clicks one of the choices to answer the question
+//check if it's right or wrong
+//update the page to display the result (pause for a few seconds)
+//update the page to show the next question (or game over)
 $(".btn").click(function(){
     console.log("Value of button is: " + $(this).val());
     TriviaGame.stopCountdown();
-    TriviaGame.checkAnswer($(this).val());
-
+    showResult(TriviaGame.checkAnswer($(this).val()));
 });
+
+function showResult(result){
+    questionContainer = $("#content-box").clone();
+    resultContainer = $("#content-box");
+    resultContainer.empty();
+    resultContainer.append($("<h3>" + result + "</h3>"));
+
+}
