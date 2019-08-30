@@ -116,34 +116,43 @@ var TriviaGame = {
 
 $(document).ready(function(){
     TriviaGame.startGame();
+    TriviaGame.setupNextQuestion();
     setupQuestionDiv();
+    playRound();
+});
+
+
+function playRound(){
+    //Start countdown timer for question
+    //Callback function will fire if time goes to 0
     TriviaGame.startCountdown(function(){
         console.log("Time's UPPPP!");
         showResult(false);
-        setTimeout(function(){
-            TriviaGame.setupNextQuestion();
-            $("#content-box").empty();
-            $("#content-box").append(questionContainer);
-            $("#question-box").text(TriviaGame.currentQuestion);
-            $("#button1").text(TriviaGame.currentChoice1);
-            $("#button2").text(TriviaGame.currentChoice2);
-            $("#button3").text(TriviaGame.currentChoice3);
-            $("#button4").text(TriviaGame.currentChoice4);
-            $("#countdown").text(TriviaGame.countdownTime);        
-        },3000);
+        setupNextRound();
     });
 
-});
+};
+
+function setupNextRound(){
+    setTimeout(function(){
+        TriviaGame.setupNextQuestion();
+        $("#content-box").empty();
+        $("#content-box").append(questionContainer);
+        setupQuestionDiv();
+        playRound();
+    },3000);
+}
 
 //user clicks one of the choices to answer the question
 //check if it's right or wrong
 //update the page to display the result (pause for a few seconds)
 //update the page to show the next question (or game over)
-$(".btn").click(function(){
+function evaluateChoice(){
     console.log("Value of button is: " + $(this).val());
     TriviaGame.stopCountdown();
     showResult(TriviaGame.checkAnswer($(this).val()));
-});
+    setupNextRound();
+};
 
 function showResult(result){
     questionContainer = $("#content-box").clone();
@@ -154,7 +163,6 @@ function showResult(result){
 }
 
 function setupQuestionDiv(){
-    TriviaGame.setupNextQuestion();
     $("#question-box").text(TriviaGame.currentQuestion);
     $("#button1").text(TriviaGame.currentChoice1);
     $("#button2").text(TriviaGame.currentChoice2);
@@ -162,3 +170,5 @@ function setupQuestionDiv(){
     $("#button4").text(TriviaGame.currentChoice4);
     $("#countdown").text(TriviaGame.countdownTime);
 }
+
+$(document).on("click", ".btn", evaluateChoice);
