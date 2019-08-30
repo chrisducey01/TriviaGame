@@ -55,13 +55,10 @@ var TriviaGame = {
     }, 
 
     setupNextQuestion: function(){
-        var gameOver = false;
+        var questionReady = false;
 
-        if(this.questionCounter == this.questions.length){
-            gameOver = true;
-        }
-        else{
-            gameOver = false;
+        if(this.questionCounter < this.questions.length){
+            questionReady = true;
             this.countdownTime = this.secondsToGuess;
             this.currentQuestion = this.questions[this.questionCounter].question;
             this.currentChoice1 = this.questions[this.questionCounter].choice1;
@@ -72,7 +69,7 @@ var TriviaGame = {
             this.questionCounter++;
         }
 
-        return gameOver;
+        return questionReady;
     },
 
     startCountdown: function(callback){
@@ -135,11 +132,15 @@ function playRound(){
 
 function setupNextRound(){
     setTimeout(function(){
-        TriviaGame.setupNextQuestion();
-        $("#content-box").empty();
-        $("#content-box").append(questionContainer);
-        setupQuestionDiv();
-        playRound();
+        if(TriviaGame.setupNextQuestion()){
+            $("#content-box").empty();
+            $("#content-box").append(questionContainer);
+            setupQuestionDiv();
+            playRound();    
+        }
+        else{
+            console.log("GAME OVER");
+        }
     },3000);
 }
 
