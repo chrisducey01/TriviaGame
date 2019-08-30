@@ -5,8 +5,8 @@ var resultContainer;    //this will hold the div element and its children to dis
 
 //TriviaGame object holds all of the questions and answers, and keeps track of all game data
 var TriviaGame = {
-    secondsToGuess : 20,
-    countdownTime : 20,
+    secondsToGuess : 10,
+    countdownTime : 0,
     intervalid: null,
     timesUp: false,
     correctAnswers: 0,
@@ -50,7 +50,7 @@ var TriviaGame = {
         this.correctAnswers = 0;
         this.questionCounter = 0;
         this.timesUp = false;
-        this.countdownTime = 20;
+        this.countdownTime = this.secondsToGuess;
         this.gameOver = false;
     }, 
 
@@ -62,6 +62,7 @@ var TriviaGame = {
         }
         else{
             gameOver = false;
+            this.countdownTime = this.secondsToGuess;
             this.currentQuestion = this.questions[this.questionCounter].question;
             this.currentChoice1 = this.questions[this.questionCounter].choice1;
             this.currentChoice2 = this.questions[this.questionCounter].choice2;
@@ -74,18 +75,18 @@ var TriviaGame = {
         return gameOver;
     },
 
-    startCountdown: function(){
+    startCountdown: function(callback){
         var that = this;
         this.timesUp = false;
         this.countdownTime = this.secondsToGuess;
-        this.intervalid = setInterval(function(){that.countdown();},1000);
+        this.intervalid = setInterval(function(){that.countdown(callback);},1000);
     },
 
     stopCountdown: function(){
         clearInterval(this.intervalid);
     },
 
-    countdown: function(){
+    countdown: function(callback){
         this.countdownTime--;
         console.log(this.countdownTime);
         $("#countdown").text(this.countdownTime);
@@ -93,6 +94,7 @@ var TriviaGame = {
             console.log("True");
             this.timesUp = true;
             this.stopCountdown();
+            callback();
         }
     },
 
@@ -114,14 +116,23 @@ var TriviaGame = {
 
 $(document).ready(function(){
     TriviaGame.startGame();
-    TriviaGame.setupNextQuestion();
-    $("#question-box").text(TriviaGame.currentQuestion);
-    $("#button1").text(TriviaGame.currentChoice1);
-    $("#button2").text(TriviaGame.currentChoice2);
-    $("#button3").text(TriviaGame.currentChoice3);
-    $("#button4").text(TriviaGame.currentChoice4);
-    $("#countdown").text(TriviaGame.countdownTime);
-    TriviaGame.startCountdown();
+    setupQuestionDiv();
+    TriviaGame.startCountdown(function(){
+        console.log("Time's UPPPP!");
+        showResult(false);
+        setTimeout(function(){
+            TriviaGame.setupNextQuestion();
+            $("#content-box").empty();
+            $("#content-box").append(questionContainer);
+            $("#question-box").text(TriviaGame.currentQuestion);
+            $("#button1").text(TriviaGame.currentChoice1);
+            $("#button2").text(TriviaGame.currentChoice2);
+            $("#button3").text(TriviaGame.currentChoice3);
+            $("#button4").text(TriviaGame.currentChoice4);
+            $("#countdown").text(TriviaGame.countdownTime);        
+        },3000);
+    });
+
 });
 
 //user clicks one of the choices to answer the question
@@ -140,4 +151,14 @@ function showResult(result){
     resultContainer.empty();
     resultContainer.append($("<h3>" + result + "</h3>"));
 
+}
+
+function setupQuestionDiv(){
+    TriviaGame.setupNextQuestion();
+    $("#question-box").text(TriviaGame.currentQuestion);
+    $("#button1").text(TriviaGame.currentChoice1);
+    $("#button2").text(TriviaGame.currentChoice2);
+    $("#button3").text(TriviaGame.currentChoice3);
+    $("#button4").text(TriviaGame.currentChoice4);
+    $("#countdown").text(TriviaGame.countdownTime);
 }
