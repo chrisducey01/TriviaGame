@@ -119,10 +119,8 @@ var TriviaGame = {
 }
 
 $(document).ready(function(){
-    TriviaGame.startGame();
-    TriviaGame.setupNextQuestion();
-    setupQuestionDiv();
-    playRound();
+    questionContainer = $("#content-box").clone();  //save the stucture to display questions
+    showGameStart();
 });
 
 
@@ -147,8 +145,21 @@ function setupNextRound(){
         }
         else{
             console.log("GAME OVER");
+            showGameOver();
         }
     },5000);
+}
+
+function setupQuestionDiv(){
+    $("#content-box").empty();
+    $("#content-box").append(questionContainer);
+    $("#question-counter").text(TriviaGame.questionCounter);
+    $("#question-box").text(TriviaGame.currentQuestion);
+    $("#button1").text(TriviaGame.currentChoice1);
+    $("#button2").text(TriviaGame.currentChoice2);
+    $("#button3").text(TriviaGame.currentChoice3);
+    $("#button4").text(TriviaGame.currentChoice4);
+    $("#countdown").text(TriviaGame.countdownTime);
 }
 
 //user clicks one of the choices to answer the question
@@ -166,15 +177,16 @@ function showResult(correctAnswer){
     var resultText = "";
     var correctAnswerText = "";
 
-    questionContainer = $("#content-box").clone();
     resultContainer = $("#content-box");
     resultContainer.empty();
 
     if(correctAnswer){
         resultText = "Way to go you answered correctly!!";
+        TriviaGame.correctAnswers++;
     }
     else{
-        resultText = "Sorry Dum Dum you got it wrong";
+        resultText = "Oh I'm sorry you are incorrect!  The right answer was:";
+        TriviaGame.wrongAnswers++;
     }
 
     if(TriviaGame.currentAnswer == 1){
@@ -192,19 +204,35 @@ function showResult(correctAnswer){
 
     console.log(correctAnswerText);
 
-    resultContainer.append($("<h3>" + resultText + "</h3>"));
-    resultContainer.append($("<h3>" + correctAnswerText + "</h3>"));
+    resultContainer.append($("<h3 class=\"questions\">" + resultText + "</h3>"));
+    resultContainer.append($("<h1 class=\"questions\">" + correctAnswerText + "</h1>"));
     resultContainer.append($("<img src='" + TriviaGame.currentImage + "'>"));
 }
 
-function setupQuestionDiv(){
-    $("#question-counter").text(TriviaGame.questionCounter);
-    $("#question-box").text(TriviaGame.currentQuestion);
-    $("#button1").text(TriviaGame.currentChoice1);
-    $("#button2").text(TriviaGame.currentChoice2);
-    $("#button3").text(TriviaGame.currentChoice3);
-    $("#button4").text(TriviaGame.currentChoice4);
-    $("#countdown").text(TriviaGame.countdownTime);
+function showGameOver(){
+    resultContainer = $("#content-box");
+    resultContainer.empty();
+
+    resultContainer.append($("<h1 class=\"questions pt-5\">" +  "GAME OVER!" + "</h1>"));
+    resultContainer.append($("<h3 class=\"questions pt-5\">" +  "Thanks for playing.  Here's how you did:" + "</h3>"));
+    resultContainer.append($("<h3 class=\"questions pt-5\">" +  "Correct Answers: " + TriviaGame.correctAnswers + "</h3>"));
+    resultContainer.append($("<h3 class=\"questions\">" + "Wrong Answers: " + TriviaGame.wrongAnswers + "</h3>"));
+    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"play-again-btn\">Click here to play again</button>"));
 }
 
-$(document).on("click", ".btn", evaluateChoice);
+function showGameStart(){
+    resultContainer = $("#content-box");
+    resultContainer.empty();
+    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"start-game-btn\">Click here to start playing</button>"));
+}
+
+function playTheGame(){
+    TriviaGame.startGame();  //initializes TriviaGame object
+    TriviaGame.setupNextQuestion();  //grabs the next question in the TriviaGame object
+    setupQuestionDiv();
+    playRound();
+}
+
+$(document).on("click", ".btn-light", evaluateChoice);
+$(document).on("click", "#play-again-btn", showGameStart);
+$(document).on("click", "#start-game-btn", playTheGame);
