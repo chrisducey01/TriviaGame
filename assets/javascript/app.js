@@ -5,7 +5,7 @@ var resultContainer;    //this will hold the div element and its children to dis
 
 //TriviaGame object holds all of the questions and answers, and keeps track of all game data
 var TriviaGame = {
-    secondsToGuess : 30,
+    secondsToGuess : 15,
     countdownTime : 0,
     intervalid: null,
     timesUp: false,
@@ -123,18 +123,6 @@ $(document).ready(function(){
     showGameStart();
 });
 
-
-function playRound(){
-    //Start countdown timer for question
-    //Callback function will fire if time goes to 0
-    TriviaGame.startCountdown(function(){
-        console.log("Time's UPPPP!");
-        showResult(false);
-        setupNextRound();
-    });
-
-};
-
 function setupNextRound(){
     setTimeout(function(){
         if(TriviaGame.setupNextQuestion()){
@@ -161,6 +149,17 @@ function setupQuestionDiv(){
     $("#button4").text(TriviaGame.currentChoice4);
     $("#countdown").text(TriviaGame.countdownTime);
 }
+
+function playRound(){
+    //Start countdown timer for question
+    //Callback function will fire if time goes to 0
+    TriviaGame.startCountdown(function(){
+        console.log("Time's UPPPP!");
+        showResult(false);
+        setupNextRound();
+    });
+
+};
 
 //user clicks one of the choices to answer the question
 //check if it's right or wrong
@@ -217,13 +216,26 @@ function showGameOver(){
     resultContainer.append($("<h3 class=\"questions pt-5\">" +  "Thanks for playing.  Here's how you did:" + "</h3>"));
     resultContainer.append($("<h3 class=\"questions pt-5\">" +  "Correct Answers: " + TriviaGame.correctAnswers + "</h3>"));
     resultContainer.append($("<h3 class=\"questions\">" + "Wrong Answers: " + TriviaGame.wrongAnswers + "</h3>"));
-    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"play-again-btn\">Click here to play again</button>"));
+    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"play-again-btn\">Click here to start over</button>"));
 }
 
 function showGameStart(){
     resultContainer = $("#content-box");
     resultContainer.empty();
-    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"start-game-btn\">Click here to start playing</button>"));
+
+    var jumbotron = $("<div class=\"jumbotron jumbotron-fluid mb-0\"></div>");
+    jumbotron.append($("<div class=\"container\"></div>"));
+    jumbotron.append($("<h1>How to Play the Game</h1>"));
+    var p = $("<p>");
+    p.addClass("lead");
+    p.text("You will be asked a series of trivia questions about Las Vegas hotels.  Each question is timed.  " +
+      "If you don't answer in the amount of time given you will get the question wrong.  At the end of the game you " + 
+      "will be shown your final score.  Click the button below when you're ready to start the clock.");
+    jumbotron.append(p);
+    jumbotron
+
+    resultContainer.append(jumbotron);
+    resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text\" id=\"start-game-btn\">Click here to start playing</button>"));
 }
 
 function playTheGame(){
