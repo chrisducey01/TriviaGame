@@ -8,6 +8,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Courgette|Kaushan+Script|Merriweather|Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <!--  -->
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js"
@@ -17,34 +22,42 @@
 </head>
 
 <body>
-    <div class="container text-center">
+    <div class="container text-center m-auto">
         <div class="row">
-            <div id="header-box" class="col">
-                <h1>Question #<span id="question-counter">1</span></h1>
+            <div class="col">
+                <h1 class="header py-2">Las Vegas Hotel Trivia</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1 class="header py-2">Question #<span id="question-counter">1</span></h1>
             </div>
         </div>
         <div id="content-box">
-            <div class="row pt-2 pb-4">
+            <div class="row py-4">
                 <div class="col">
-                    <h3 id="question-box">This is the question box.</h3>
-                </div>
-            </div>
-            <div id="choice-box" class="row">
-                <div class="col-12 py-1">
-                    <button type="button" id="button1" class="btn btn-outline-secondary w-100" value=1>Choice
-                        #1</button>
-                </div>
-                <div class="col-12 py-1">
-                    <button type="button" id="button2" class="btn btn-outline-secondary w-100" value=2>Choice #2</button>
-                </div>
-                <div class="col-12 py-1">
-                    <button type="button" id="button3" class="btn btn-outline-secondary w-100" value=3>Choice #3</button>
-                </div>
-                <div class="col-12 py-1">
-                    <button type="button" id="button4" class="btn btn-outline-secondary w-100" value=4>Choice #4</button>
+                    <h3 id="question-box" class="questions"></h3>
                 </div>
             </div>
             <div class="row">
+                <div class="col-12 py-3">
+                    <button type="button" id="button1" class="btn btn-light btn-block btn-text" value=1>Choice
+                        #1</button>
+                </div>
+                <div class="col-12 py-3">
+                    <button type="button" id="button2" class="btn btn-light btn-block btn-text" value=2>Choice
+                        #2</button>
+                </div>
+                <div class="col-12 py-3">
+                    <button type="button" id="button3" class="btn btn-light btn-block btn-text" value=3>Choice
+                        #3</button>
+                </div>
+                <div class="col-12 py-3">
+                    <button type="button" id="button4" class="btn btn-light btn-block btn-text" value=4>Choice
+                        #4</button>
+                </div>
+            </div>
+            <div class="row pt-4">
                 <div class="col">
                     <h3><span class=".d-inline" id="countdown"></span> seconds remaining</h3>
                 </div>

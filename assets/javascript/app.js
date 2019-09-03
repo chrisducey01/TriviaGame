@@ -5,11 +5,12 @@ var resultContainer;    //this will hold the div element and its children to dis
 
 //TriviaGame object holds all of the questions and answers, and keeps track of all game data
 var TriviaGame = {
-    secondsToGuess : 10,
+    secondsToGuess : 30,
     countdownTime : 0,
     intervalid: null,
     timesUp: false,
     correctAnswers: 0,
+    wrongAnswers: 0,
     questionCounter: 0,
     currentQuestion: "",
     currentChoice1: "",
@@ -17,37 +18,42 @@ var TriviaGame = {
     currentChoice3: "",
     currentChoice4: "",
     currentAnswer: 0,
+    currentImage: "",   
     gameOver: false,
 
     questions: [
         {
-            question: "QUESTION 1",
-            choice1: "CHOICE 1",
-            choice2: "CHOICE 2",
-            choice3: "CHOICE 3",
-            choice4: "CHOICE 4",
-            answer: 2
+            question: "Which hotel has a soaring, iconic fountain show that is choreographed to music?",
+            choice1: "Bally's",
+            choice2: "MGM Grand",
+            choice3: "Bellagio",
+            choice4: "Treasure Island",
+            answer: 3,
+            image: "assets/images/bellagio.gif"
         },
         {
-            question: "QUESTION 2",
-            choice1: "CHOICE 1",
-            choice2: "CHOICE 2",
-            choice3: "CHOICE 3",
-            choice4: "CHOICE 4",
-            answer: 3
+            question: "Which hotel has gondola rides where you can float down a grand canal?",
+            choice1: "Luxor",
+            choice2: "Venetian",
+            choice3: "Paris",
+            choice4: "Mandalay Bay",
+            answer: 2,
+            image: "assets/images/venetian.gif"
         },
         {
-            question: "QUESTION 3",
-            choice1: "CHOICE 1",
-            choice2: "CHOICE 2",
-            choice3: "CHOICE 3",
-            choice4: "CHOICE 4",
-            answer: 1
+            question: "This hotel has a 203ft roller coaster and resembles a popular U.S. city skyline",
+            choice1: "Chicago, IL",
+            choice2: "New York, New York",
+            choice3: "Houston, TX",
+            choice4: "Washington, DC",
+            answer: 2,
+            image: "assets/images/nyny.gif"
         }
     ],
 
     startGame: function(){
         this.correctAnswers = 0;
+        this.wrongAnswers = 0;
         this.questionCounter = 0;
         this.timesUp = false;
         this.countdownTime = this.secondsToGuess;
@@ -66,6 +72,7 @@ var TriviaGame = {
             this.currentChoice3 = this.questions[this.questionCounter].choice3;
             this.currentChoice4 = this.questions[this.questionCounter].choice4;
             this.currentAnswer = this.questions[this.questionCounter].answer;
+            this.currentImage = this.questions[this.questionCounter].image;
             this.questionCounter++;
         }
 
@@ -98,7 +105,7 @@ var TriviaGame = {
     checkAnswer: function(answerVal){
         var correctAnswer = false;
 
-        if(answerVal == this.questions[this.questionCounter].answer){
+        if(answerVal == this.currentAnswer){
             console.log("You chose the correct answer!");
             correctAnswer = true;
         }
@@ -141,7 +148,7 @@ function setupNextRound(){
         else{
             console.log("GAME OVER");
         }
-    },3000);
+    },5000);
 }
 
 //user clicks one of the choices to answer the question
@@ -155,15 +162,43 @@ function evaluateChoice(){
     setupNextRound();
 };
 
-function showResult(result){
+function showResult(correctAnswer){
+    var resultText = "";
+    var correctAnswerText = "";
+
     questionContainer = $("#content-box").clone();
     resultContainer = $("#content-box");
     resultContainer.empty();
-    resultContainer.append($("<h3>" + result + "</h3>"));
 
+    if(correctAnswer){
+        resultText = "Way to go you answered correctly!!";
+    }
+    else{
+        resultText = "Sorry Dum Dum you got it wrong";
+    }
+
+    if(TriviaGame.currentAnswer == 1){
+        correctAnswerText = TriviaGame.currentChoice1;
+    }
+    else if(TriviaGame.currentAnswer == 2){
+        correctAnswerText = TriviaGame.currentChoice2;
+    }
+    else if(TriviaGame.currentAnswer == 3){
+        correctAnswerText = TriviaGame.currentChoice3;
+    }
+    else{
+        correctAnswerText = TriviaGame.currentChoice4;
+    }
+
+    console.log(correctAnswerText);
+
+    resultContainer.append($("<h3>" + resultText + "</h3>"));
+    resultContainer.append($("<h3>" + correctAnswerText + "</h3>"));
+    resultContainer.append($("<img src='" + TriviaGame.currentImage + "'>"));
 }
 
 function setupQuestionDiv(){
+    $("#question-counter").text(TriviaGame.questionCounter);
     $("#question-box").text(TriviaGame.currentQuestion);
     $("#button1").text(TriviaGame.currentChoice1);
     $("#button2").text(TriviaGame.currentChoice2);
