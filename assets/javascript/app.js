@@ -48,6 +48,33 @@ var TriviaGame = {
             choice4: "Washington, DC",
             answer: 2,
             image: "assets/images/nyny.gif"
+        },
+        {
+            question: "Which hotel is home to the world's largest ferris wheel?",
+            choice1: "The Linq",
+            choice2: "Palms",
+            choice3: "Caesar's Palace",
+            choice4: "Flamingo",
+            answer: 1,
+            image: "assets/images/linq.jpeg"
+        },
+        {
+            question: "This hotel is home to Siegfried & Roy's Secret Garden and Dolphin Habitat",
+            choice1: "Aria",
+            choice2: "Excalibur",
+            choice3: "Paris",
+            choice4: "Mirage",
+            answer: 4,
+            image: "assets/images/mirage.gif"
+        },
+        {
+            question: "Which hotel has an 11 acre pool area with a lazy river that features a small waterfall?",
+            choice1: "The Cosmopolitan",
+            choice2: "Hard Rock Hotel and Casino",
+            choice3: "Mandalay Bay",
+            choice4: "Rio",
+            answer: 3,
+            image: "assets/images/mandalay_bay.jpeg"
         }
     ],
 
@@ -92,10 +119,8 @@ var TriviaGame = {
 
     countdown: function(callback){
         this.countdownTime--;
-        console.log(this.countdownTime);
         $("#countdown").text(this.countdownTime);
         if(this.countdownTime == 0){
-            console.log("True");
             this.timesUp = true;
             this.stopCountdown();
             callback();
@@ -106,11 +131,9 @@ var TriviaGame = {
         var correctAnswer = false;
 
         if(answerVal == this.currentAnswer){
-            console.log("You chose the correct answer!");
             correctAnswer = true;
         }
         else{
-            console.log("Sorry you chose the wrong answer.");
             correctAnswer = false;
         }
 
@@ -132,7 +155,6 @@ function setupNextRound(){
             playRound();    
         }
         else{
-            console.log("GAME OVER");
             showGameOver();
         }
     },5000);
@@ -154,7 +176,6 @@ function playRound(){
     //Start countdown timer for question
     //Callback function will fire if time goes to 0
     TriviaGame.startCountdown(function(){
-        console.log("Time's UPPPP!");
         showResult(false);
         setupNextRound();
     });
@@ -166,7 +187,6 @@ function playRound(){
 //update the page to display the result (pause for a few seconds)
 //update the page to show the next question (or game over)
 function evaluateChoice(){
-    console.log("Value of button is: " + $(this).val());
     TriviaGame.stopCountdown();
     showResult(TriviaGame.checkAnswer($(this).val()));
     setupNextRound();
@@ -200,8 +220,6 @@ function showResult(correctAnswer){
     else{
         correctAnswerText = TriviaGame.currentChoice4;
     }
-
-    console.log(correctAnswerText);
 
     resultContainer.append($("<h3 class=\"questions\">" + resultText + "</h3>"));
     resultContainer.append($("<h1 class=\"questions\">" + correctAnswerText + "</h1>"));
