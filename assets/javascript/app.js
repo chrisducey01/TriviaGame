@@ -1,13 +1,13 @@
 //the div with id "content-box" will swap out between the two div elements below depending on whether a question
-//is being displayed or it's time to display if the user got the question right or wrong (the result)
+//is being displayed or it's time to display if the player got the question right or wrong (the result)
 var questionContainer;  //this will be temp storage to hold the div element and its children for the trivia question
 var resultContainer;    //this will hold the div element and its children to display at the end of a question
 
 //TriviaGame object holds all of the questions and answers, and keeps track of all game data
 var TriviaGame = {
-    secondsToGuess : 15,
-    countdownTime : 0,
-    intervalid: null,
+    secondsToGuess : 15,  
+    countdownTime : 0,      //keeps track of countdown time for each question
+    intervalid: null,       //id to keep track of interval timer to start/stop
     timesUp: false,
     correctAnswers: 0,
     wrongAnswers: 0,
@@ -139,13 +139,24 @@ var TriviaGame = {
 
         return correctAnswer;
     }
-}
+} //ends TriviaGame object definition
 
+
+//when the page loads, save off the structure of the div with the content-box id
+//so we have the structure to show each question on the page between rounds
+//then setup the page to show the starting splash page
 $(document).ready(function(){
     questionContainer = $("#content-box").clone();  //save the stucture to display questions
     showGameStart();
 });
 
+
+//function runs after a round is played (not including first round)
+//uses a setTimeout so that question results (right or wrong) are
+//shown for a few seconds before going to the next question
+//
+//if that was the last question in the previous round, the game is over
+//and the showGameOver function is called instead
 function setupNextRound(){
     setTimeout(function(){
         if(TriviaGame.setupNextQuestion()){
@@ -160,6 +171,8 @@ function setupNextRound(){
     },5000);
 }
 
+
+//function sets up the page to display whatever the current question is
 function setupQuestionDiv(){
     $("#content-box").empty();
     $("#content-box").append(questionContainer);
@@ -172,6 +185,12 @@ function setupQuestionDiv(){
     $("#countdown").text(TriviaGame.countdownTime);
 }
 
+
+//function starts the timer and passes a callback function
+//that will fire only if the countdown goes to 0
+//
+//this will setup the results to load on the page so the
+//user can't keep trying to guess after the time is up
 function playRound(){
     //Start countdown timer for question
     //Callback function will fire if time goes to 0
@@ -182,7 +201,8 @@ function playRound(){
 
 };
 
-//user clicks one of the choices to answer the question
+
+//player clicks one of the choices to answer the question
 //check if it's right or wrong
 //update the page to display the result (pause for a few seconds)
 //update the page to show the next question (or game over)
@@ -192,6 +212,9 @@ function evaluateChoice(){
     setupNextRound();
 };
 
+
+//updates the page to show whether the player answered 
+//the question right or wrong
 function showResult(correctAnswer){
     var resultText = "";
     var correctAnswerText = "";
@@ -226,6 +249,9 @@ function showResult(correctAnswer){
     resultContainer.append($("<img src='" + TriviaGame.currentImage + "'>"));
 }
 
+
+//updates the page to show that the game is over and final stats
+//player can click on a button to start the game over
 function showGameOver(){
     resultContainer = $("#content-box");
     resultContainer.empty();
@@ -237,6 +263,9 @@ function showGameOver(){
     resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text mt-5\" id=\"play-again-btn\">Click here to start over</button>"));
 }
 
+
+//updates page to show the starting splash screen and setups button
+//for user to click to start the game
 function showGameStart(){
     resultContainer = $("#content-box");
     resultContainer.empty();
@@ -256,13 +285,17 @@ function showGameStart(){
     resultContainer.append($("<button type=\"button\" class=\"btn btn-primary btn-text\" id=\"start-game-btn\">Click here to start playing</button>"));
 }
 
+
+//function is called when user clicks on button to start the game
 function playTheGame(){
     TriviaGame.startGame();  //initializes TriviaGame object
     TriviaGame.setupNextQuestion();  //grabs the next question in the TriviaGame object
-    setupQuestionDiv();
-    playRound();
+    setupQuestionDiv();              //displays question on the page
+    playRound();                     //starts the round with the timer counting down
 }
 
+
+//sets up event listeners for the document
 $(document).on("click", ".btn-light", evaluateChoice);
 $(document).on("click", "#play-again-btn", showGameStart);
 $(document).on("click", "#start-game-btn", playTheGame);
